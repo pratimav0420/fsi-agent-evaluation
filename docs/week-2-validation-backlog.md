@@ -19,7 +19,8 @@ are blocked, but implementation choices may need adjustment.
 - Confirm `usage` is populated (or determine if it's only on message steps).
 - Document the exact JSON shape for normalization code.
 
-**Status:** Ready to validate with live spike.
+**Status:** Complete for the Foundry v1 Responses surface. Structured function name, JSON
+arguments, call ID, final response, and usage were observed. Tool results remain client-captured.
 
 ---
 
@@ -35,7 +36,8 @@ user-defined function tools?
   client-captured outputs must be included.
 - Document any evaluators that explicitly do NOT support function tools.
 
-**Status:** Requires `azure-ai-evaluation` installation + live endpoint.
+**Status:** Partially complete. `ToolCallAccuracyEvaluator` accepted converter-format function
+calls and returned a structured result. It is experimental; broader evaluator coverage is optional.
 
 ---
 
@@ -50,7 +52,8 @@ programmatic gate logic?
 - Document the result schema (fields, nesting, score formats).
 - Confirm results can be serialized to JSON for CI artifact retention.
 
-**Status:** Requires evaluation SDK integration.
+**Status:** Complete. The evaluator returned a serializable dictionary containing status, score,
+threshold, reason, and pass fields.
 
 ---
 
@@ -66,7 +69,8 @@ to submit agent runs and evaluation runs?
 - Document the role assignment commands.
 - Confirm OIDC federated credential works with these roles.
 
-**Status:** Requires Azure admin access for role testing.
+**Status:** Open. Authentication and project/deployment access succeeded, but least-privilege role
+reduction was not tested against a dedicated identity.
 
 ---
 
@@ -82,7 +86,8 @@ bundle for the L100 workshop?
 - Verify the offline bundle can be consumed without Azure access.
 - Confirm the bundle is version-stamped to detect drift.
 
-**Status:** Depends on V1–V3 completion. Final step of Week 2.
+**Status:** Complete. Sanitized passing and authorization-order failure recordings are stored in
+`data/offline-bundle` and replay without Azure access.
 
 ---
 

@@ -1,0 +1,7 @@
+{
+  "id": "TC-GOLDEN-001",
+  "requirement_id": "REQ-ENTITLEMENT-001",
+  "conversation_turns": ["What is the status of my claim CLM-FAKE-20260101-001?"],
+  "expected_tool_sequence": ["verify_entitlement", "get_claim_summary"],
+  "metadata": {"tier": "golden", "synthetic": true, "must_pass": true}
+}

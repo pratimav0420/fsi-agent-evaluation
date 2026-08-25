@@ -1,111 +1,58 @@
 # FSI Agent Evaluation Starter Kit
 
-## What This Kit Proves
+An executable reference for moving an enterprise agent from a convincing demo to requirement-traceable release evidence. The sample is a small Personal Auto Post-FNOL Claims Servicing Agent using synthetic data only.
 
-Traditional software testing breaks down when an AI agent can take multiple
-valid paths to the same outcome — or confidently take a wrong one. This starter
-kit proves that **enterprise agent evaluation** can be:
+The kit demonstrates deterministic control assertions, semantic-evaluator extension points, normalized trajectory evidence, severity-aware gates, baseline comparison, failure analysis, and CI/CD integration. It is not a compliance certification tool or a production claims system.
 
-1. **Traceable** — every evaluation criterion ties back to a documented
-   business requirement.
-2. **Risk-gated** — release decisions use severity-aware quality bars, not
-   subjective review.
-3. **Automated** — evaluation pipelines run in CI/CD, not in notebooks after
-   the fact.
-4. **Progressive** — teams start with deterministic assertions and layer in
-   model-based judgment only where objectivity ends.
+## Quick start
 
-The reference scenario is a small, intentionally imperfect **Personal Auto
-Post-FNOL Claims Servicing Agent** built on Microsoft Foundry. It is a teaching
-vehicle, not a production system.
+Use Python 3.11 or newer.
 
----
-
-## Who This Is For
-
-| Persona | They need to… |
-|---------|---------------|
-| **CSAs & Architects** | Understand the evaluation pattern and advise customers |
-| **AI Developers** | Customize evaluations for their own agents |
-| **Platform / Governance Teams** | Operationalize evaluation pipelines and release gates |
-
----
-
-## What This Is _Not_
-
-- Not a compliance certification tool.
-- Not a full-featured claims processing system.
-- Not a benchmark of model capabilities.
-- Not a replacement for domain-specific risk frameworks.
-
----
-
-## Repository Structure
-
-```
-├── README.md                        ← You are here
-├── docs/
-│   ├── 01-product-charter.md        ← Scope, users, success criteria
-│   └── decisions/
-│       └── ADR-001-reference-scenario.md
-├── workshop/
-│   └── learning-path.md             ← L100 → L200 → L300 progression
-├── src/                             ← (Week 2+) Sample agent & evaluators
-├── evaluations/                     ← (Week 2+) Test sets & configs
-├── .github/workflows/               ← (Week 2+) CI/CD pipelines
-└── data/                            ← (Week 2+) Synthetic datasets
-    ├── golden/                      ← Hand-authored release-gating cases
-    ├── candidates/                  ← Generated cases awaiting approval
-    ├── adversarial/                 ← Edge-case and boundary tests
-    ├── regression/                  ← Cases from resolved past failures
-    └── offline-bundle/              ← Recorded outputs for L100 workshop
+```text
+python -m pip install -e ".[dev]"
+fsi-agent-eval validate
+fsi-agent-eval baseline --output artifacts/baseline
+fsi-agent-eval broken --output artifacts/broken
+fsi-agent-eval compare
+fsi-agent-eval replay --bundle data/offline-bundle/live-pass.json
 ```
 
-> Directories marked **(Week 2+)** do not exist yet. They are shown to
-> communicate intended structure.
+The baseline runs five representative synthetic cases. The broken profile intentionally retrieves protected claim data before entitlement verification and must be blocked. To run all 20 curated cases:
 
----
+```text
+fsi-agent-eval baseline --cases evaluations/datasets/seed-cases.yaml --output artifacts/pull-request
+```
 
-## Key Design Principles
+Each run writes JSON, Markdown, and JUnit-compatible evidence. Azure is not required for offline evaluation.
 
-1. **Requirement → Evaluation traceability.** Every eval maps to a
-   requirement ID.
-2. **Deterministic first.** If a behavior can be objectively verified (e.g.,
-   "agent must not call the payment tool before verifying entitlement"),
-   use assertions — not LLM judges.
-3. **Model-based evaluators for semantic judgment only.** Use them where human
-   raters would disagree on exact wording but agree on intent.
-4. **Evaluation evidence ≠ runtime enforcement.** Eval results inform release
-   decisions; they do not act as runtime guardrails.
-5. **Synthetic data only.** No real customer data in this repository.
+The recorded live bundle was produced from a sanitized Foundry v1 run. Replaying
+`live-broken-order.json` must block on entitlement-before-retrieval.
 
----
+## Repository map
 
-## Getting Started
+- `docs/`: product charter, behavioral boundaries, taxonomy, architecture, gate policy, and decisions.
+- `evaluations/`: ten requirements, 20 curated cases, and execution profiles.
+- `src/fsi_agent_eval/`: provider-neutral contracts, local/fake adapters, tools, evaluators, gates, reporting, and CLI.
+- `spikes/`: isolated live Microsoft Foundry validation.
+- `failure-lab/`: intentional failures, diagnoses, remediation, and regression links.
+- `workshop/`: L100-L300 learning path, 60-minute workshop, and customer mapping worksheets.
+- `.github/workflows/`: runnable offline PR gate and approved OIDC-based live validation.
 
-This repository is in **product-definition phase** (Week 1). Start with:
+## Design principles
 
-1. [Product Charter](docs/01-product-charter.md) — understand scope and goals.
-2. [Learning Path](workshop/learning-path.md) — find your entry point by
-   experience level.
-3. [ADR-001](docs/decisions/ADR-001-reference-scenario.md) — why personal auto
-   claims servicing?
+1. Every case and result links to a stable business requirement.
+2. Objective behavior uses deterministic assertions; model-based judges are limited to semantic quality.
+3. Critical failures and required evaluator errors cannot be averaged away.
+4. Gate logic consumes normalized contracts, never raw provider objects.
+5. Evaluation evidence informs release decisions but is not a runtime guardrail.
+6. No real customer, claim, policy, identity, or Azure configuration belongs in the repository.
 
-When Week 2 artifacts land, L100 learners will use a **prepared offline
-evaluation bundle** — no Azure access required — to run a baseline evaluation,
-inspect one agent trace, and explain why a critical control failure blocks
-release, all within 20 minutes. An optional live mode reproduces the same
-evaluation against a Foundry endpoint.
+Start with the [product charter](docs/01-product-charter.md), [scenario boundaries](docs/02-scenario-and-agent-boundaries.md), and [workshop](workshop/60-minute-workshop.md).
 
----
+## Live Foundry validation
 
-## Contributing
-
-Contribution guidelines will be added when the repository moves to
-implementation phase.
-
----
+The optional spike uses `DefaultAzureCredential` and two runtime settings documented in `.env.example`. It captures only sanitized trace-shape and SDK findings. The live path must never silently fall back to fake results.
 
 ## License
 
-TBD — intended to be released under MIT.
+MIT.

@@ -26,6 +26,7 @@ build/
 .coverage
 htmlcov/
 .mypy_cache/
+artifacts/
 
 # OS
 .DS_Store

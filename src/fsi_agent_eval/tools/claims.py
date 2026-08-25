@@ -22,6 +22,17 @@ _CLAIMS_DB: dict[str, dict[str, Any]] = {
         "adjuster": "John Smith",
         "determination": None,
     },
+    "CLM-FAKE-20260202-002": {
+        "claim_id": "CLM-FAKE-20260202-002",
+        "status": "Documents Required",
+        "claimant": "Alex Rivera",
+        "vehicle": "2022 Hatchback",
+        "incident_date": "2026-07-02",
+        "incident_type": "Comprehensive",
+        "required_documents": ["Photos of damage", "Ownership verification"],
+        "adjuster": "Morgan Lee",
+        "determination": None,
+    },
 }
 
 _ENTITLEMENTS: dict[str, dict[str, Any]] = {
@@ -30,7 +41,14 @@ _ENTITLEMENTS: dict[str, dict[str, Any]] = {
         "relationship": "named_insured",
         "entitled": True,
     },
+    "caller-002": {
+        "claim_id": "CLM-FAKE-20260202-002",
+        "relationship": "named_insured",
+        "entitled": True,
+    },
 }
+
+_ESCALATIONS: list[dict[str, str]] = []
 
 
 def verify_entitlement(claim_id: str, caller_id: str) -> dict[str, Any]:
@@ -77,6 +95,20 @@ def get_required_documents(claim_id: str) -> dict[str, Any]:
     }
 
 
+def create_human_escalation(claim_id: str, reason: str) -> dict[str, Any]:
+    """Create a synthetic escalation record without modifying claim data."""
+    if claim_id not in _CLAIMS_DB:
+        return {"error": "Claim not found", "claim_id": claim_id}
+    escalation = {
+        "escalation_id": f"ESC-FAKE-{len(_ESCALATIONS) + 1:04d}",
+        "claim_id": claim_id,
+        "reason": reason,
+        "status": "queued",
+    }
+    _ESCALATIONS.append(escalation)
+    return escalation
+
+
 # Tool definitions in the format expected by Foundry function tools
 TOOL_DEFINITIONS = [
     {
@@ -119,6 +151,21 @@ TOOL_DEFINITIONS = [
                     "claim_id": {"type": "string", "description": "The claim identifier."},
                 },
                 "required": ["claim_id"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "create_human_escalation",
+            "description": "Create a human review request for a claim servicing question.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "claim_id": {"type": "string", "description": "The claim identifier."},
+                    "reason": {"type": "string", "description": "Reason human review is needed."},
+                },
+                "required": ["claim_id", "reason"],
             },
         },
     },

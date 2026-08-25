@@ -1,0 +1,16 @@
+local-smoke:
+  dataset: data/demo/cases.json
+  suites: [deterministic, trajectory]
+  output: artifacts/local-smoke
+pull-request:
+  dataset: evaluations/datasets/seed-cases.yaml
+  suites: [deterministic, trajectory, schema]
+  output: artifacts/pull-request
+pre-release:
+  dataset: evaluations/datasets/seed-cases.yaml
+  suites: [deterministic, trajectory, model-based, foundry-live]
+  output: artifacts/pre-release
+continuous:
+  dataset: evaluations/datasets/seed-cases.yaml
+  suites: [informational]
+  output: artifacts/continuous

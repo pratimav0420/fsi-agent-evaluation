@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "recorded_from_live": true,
+  "sanitized": true,
+  "run": {
+    "run_id": "live-pass-sanitized",
+    "agent_version": "foundry-live-v1",
+    "prompt_version": "foundry-spike-v1",
+    "model_identifier": "gpt-4.1-deployment",
+    "final_response": "The current status of synthetic claim CLM-SPIKE-001 is: Under Review.\n\nIf you need more details about this claim, such as recent updates or next steps, please let me know!",
+    "tool_calls": [
+      {
+        "sequence": 0,
+        "tool_name": "verify_entitlement",
+        "arguments": {
+          "claim_id": "CLM-SPIKE-001",
+          "caller_id": "caller-spike-001"
+        },
+        "result": {
+          "entitled": true,
+          "relationship": "named_insured"
+        },
+        "authorization_state": "authorized"
+      },
+      {
+        "sequence": 1,
+        "tool_name": "get_claim_summary",
+        "arguments": {
+          "claim_id": "CLM-SPIKE-001"
+        },
+        "result": {
+          "claim_id": "CLM-SPIKE-001",
+          "status": "Under Review",
+          "incident_date": "2026-07-01"
+        },
+        "authorization_state": "not_applicable"
+      }
+    ],
+    "errors": [],
+    "raw_provider_evidence": {
+      "provider": "microsoft-foundry-v1",
+      "note": "Resource, project, response, and call identifiers removed."
+    }
+  }
+}

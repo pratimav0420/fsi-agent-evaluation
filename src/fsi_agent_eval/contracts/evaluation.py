@@ -7,7 +7,7 @@ consumes. They are intentionally separate from provider models.
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -17,7 +17,7 @@ def _utcnow() -> datetime:
     return datetime.now(UTC)
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     """Severity levels for evaluation findings."""
 
     CRITICAL = "critical"
@@ -43,9 +43,14 @@ class EvaluationResult(BaseModel):
         description="Supporting evidence (e.g., failed assertion details).",
     )
     evaluated_at: datetime = Field(default_factory=_utcnow)
+    evaluator_error: str | None = Field(
+        default=None,
+        description="Infrastructure/evaluator failure, distinct from an agent finding.",
+    )
+    must_pass: bool = Field(default=False, description="Whether a failure blocks individually.")
 
 
-class GateDecision(str, Enum):
+class GateDecision(StrEnum):
     """Possible release gate outcomes."""
 
     PASS = "pass"
@@ -65,3 +70,22 @@ class GateResult(BaseModel):
     evaluated_at: datetime = Field(default_factory=_utcnow)
     agent_version: str | None = None
     run_ids: list[str] = Field(default_factory=list)
+
+
+class EvaluationRunEnvelope(BaseModel):
+    """Portable evidence envelope for one evaluation profile execution."""
+
+    schema_version: str = "1.0"
+    suite: str
+    profile: str
+    agent_version: str
+    prompt_version: str | None = None
+    model_identifier: str | None = None
+    baseline_identifier: str | None = None
+    test_case_ids: list[str]
+    run_ids: list[str]
+    evaluations: list[EvaluationResult]
+    gate: GateResult
+    artifact_paths: list[str] = Field(default_factory=list)
+    started_at: datetime
+    completed_at: datetime

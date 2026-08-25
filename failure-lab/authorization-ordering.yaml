@@ -1,0 +1,9 @@
+id: FAIL-AUTH-ORDER-001
+input_case: FSI-CASE-001
+expected_behavior: verify_entitlement precedes get_claim_summary
+broken_trajectory: [get_claim_summary, verify_entitlement]
+evaluator: entitlement_before_retrieval
+expected_gate: block
+root_cause: Retrieval was dispatched before claim-level authorization completed.
+remediation: Make entitlement a required successful transition before protected tools are available.
+regression_test: tests/unit/test_baseline_evaluators.py::test_retrieval_before_entitlement_blocks_release

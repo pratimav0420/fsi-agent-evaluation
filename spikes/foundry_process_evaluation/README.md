@@ -1,110 +1,39 @@
-# Foundry Process Evaluation Spike
-
-## Purpose
-
-Validate the Week 2 backlog items against a real Microsoft Foundry endpoint:
-
-1. What tool-call information is returned for a user-defined function tool?
-2. Can that information be normalized without depending on a portal-only trace?
-3. Which current Foundry agent/process evaluators accept the captured format?
-4. Can structured evaluation results be retrieved programmatically?
-5. Which exact SDK versions and APIs were validated?
+# Foundry v1 Process Evaluation Spike
 
 ## Status
 
-**Not yet executed** — awaiting Foundry endpoint configuration.
+Executed successfully on August 9, 2026 using synthetic inputs and Microsoft Entra authentication. Committed findings contain no resource, project, tenant, subscription, response, or tool-call identifiers.
 
----
+## Validated stack
 
-## Prerequisites
+| Package | Version |
+|---|---|
+| azure-ai-projects | 2.4.0 |
+| azure-ai-evaluation | 1.18.3 |
+| azure-identity | 1.25.3 |
+| openai | 2.53.0 |
 
-```bash
-# Required environment variables (see ../../.env.example)
-export AZURE_AI_PROJECT_CONNECTION_STRING="<your-foundry-project-connection-string>"
-export AZURE_AI_AGENT_MODEL_DEPLOYMENT="<your-model-deployment-name>"
-```
+The spike uses a Foundry v1 project endpoint (`.../api/projects/<project>`) and `DefaultAzureCredential`. The earlier connection-string and Threads/RunSteps design was obsolete for the validated service surface.
 
-Authentication uses `DefaultAzureCredential` (Azure CLI login, managed identity,
-or VS Code credential). No API keys or client secrets.
+## Confirmed behavior
 
-## Running the Spike
+- The project client enumerates deployments and returns an authenticated OpenAI client.
+- Responses returns a structured function call with name, JSON arguments, and a call ID.
+- Tool outputs are supplied by the client using `function_call_output` and captured client-side.
+- A passing live run produced `verify_entitlement -> get_claim_summary`.
+- An intentional live failure produced `get_claim_summary` without entitlement.
+- Response usage metadata was available.
+- `ToolCallAccuracyEvaluator` accepted converter-format calls and returned a serializable dictionary with score 5.0 and `passed=true`.
 
-```bash
-cd spikes/foundry_process_evaluation
-python run_spike.py
-```
+## Limitations
 
-If required environment variables are absent, the spike exits with:
-```
-SKIPPED: Missing required environment variable: AZURE_AI_PROJECT_CONNECTION_STRING
-Set up instructions: see ../../.env.example
-```
+- `ToolCallAccuracyEvaluator` is explicitly experimental in azure-ai-evaluation 1.18.3.
+- It requires `{type, name, arguments, tool_call_id}` calls and flattened function definitions; raw Responses objects are not accepted directly.
+- Responses provides client-observed trajectory evidence. Provider trace export remains a separate validation if server-side spans are required.
+- Exact least-privilege RBAC roles were not reduced empirically; the authenticated identity had sufficient existing access.
 
-## SDK Versions Under Test
+## Run
 
-| Package | Version | Status |
-|---|---|---|
-| azure-ai-agents | 1.2.0b5 | Installed |
-| azure-ai-projects | 2.0.0b1 | Installed |
-| azure-ai-evaluation | 1.18.3 | To install for live spike |
-| azure-identity | 1.19.0 | Installed |
+Set `FOUNDRY_PROJECT_ENDPOINT` and `FOUNDRY_MODEL_NAME`, authenticate with Entra ID, then run `python spikes/foundry_process_evaluation/run_spike.py`.
 
----
-
-## Findings
-
-### Confirmed Behavior
-
-*(To be filled after spike execution)*
-
-### Observed Limitations
-
-**From SDK inspection (pre-execution):**
-
-- `RunStepFunctionToolCallDetails` contains only `name` and `arguments` —
-  **no `output` field**. Tool outputs submitted via `submit_tool_outputs`
-  are not reflected back in the RunStep's tool_calls list.
-- This means tool output must be captured **client-side** at the time of
-  submission, or retrieved via a separate mechanism.
-- `RunStep` provides timing (`created_at`, `completed_at`) and token `usage`.
-- `ThreadRun` provides `model` identifier and aggregate usage.
-- `RunStepToolCall` has only `id` and `type` at the base level.
-
-**Implication for normalization:**
-The adapter must record tool outputs at submission time and merge them with
-RunStep data to produce a complete `ToolCallRecord`. Relying solely on
-RunStep retrieval will yield arguments but NOT results.
-
-### Untested Assumptions
-
-1. Whether `azure-ai-evaluation` process evaluators accept the trace format
-   produced by `azure-ai-agents` RunStep data.
-2. Whether evaluation results from `azure-ai-evaluation` are structured JSON
-   retrievable programmatically (not just portal display).
-3. Exact RBAC roles required for a service principal to submit evaluation runs.
-4. Whether RunStep `usage` is populated for function-tool steps (vs. only
-   message-creation steps).
-
-### Recommended Week 2 Implementation Choice
-
-Based on SDK inspection:
-
-1. **Capture tool outputs at submission time.** The adapter must intercept or
-   record the output string passed to `submit_tool_outputs` and associate it
-   with the corresponding `tool_call_id`.
-2. **Merge RunStep metadata with captured outputs.** Build the normalized
-   `ToolCallRecord` from: RunStep (timing, call ID, function name, arguments)
-   + client-captured output (result string).
-3. **Do not depend on a single API call for complete traces.** The full
-   picture requires: ThreadRun (model, aggregate usage) + RunSteps (per-step
-   details) + client-captured outputs.
-4. **Validate process evaluator input format** in the live spike before
-   committing to a specific evaluator integration pattern.
-
----
-
-## Output
-
-Sanitized example outputs are saved to `expected_outputs/` after successful
-live execution. No tokens, subscription IDs, endpoints, tenant IDs, or other
-secrets are included in committed output.
+With missing configuration, the script prints `SKIPPED` and never creates fake findings. Successful execution writes sanitized findings and replaces the L100 recorded bundles.

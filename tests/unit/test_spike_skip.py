@@ -19,8 +19,8 @@ class TestSpikeSkipBehavior:
         """Spike exits with SKIPPED message when env vars are missing."""
         env = os.environ.copy()
         # Ensure required vars are not set
-        env.pop("AZURE_AI_PROJECT_CONNECTION_STRING", None)
-        env.pop("AZURE_AI_AGENT_MODEL_DEPLOYMENT", None)
+        env.pop("FOUNDRY_PROJECT_ENDPOINT", None)
+        env.pop("FOUNDRY_MODEL_NAME", None)
 
         result = subprocess.run(
             [sys.executable, str(SPIKE_SCRIPT)],
@@ -32,13 +32,13 @@ class TestSpikeSkipBehavior:
 
         assert result.returncode == 0
         assert "SKIPPED" in result.stdout
-        assert "AZURE_AI_PROJECT_CONNECTION_STRING" in result.stdout
+        assert "FOUNDRY_PROJECT_ENDPOINT" in result.stdout
 
     def test_spike_does_not_silently_fallback(self) -> None:
         """Spike never silently produces fake results when config is missing."""
         env = os.environ.copy()
-        env.pop("AZURE_AI_PROJECT_CONNECTION_STRING", None)
-        env.pop("AZURE_AI_AGENT_MODEL_DEPLOYMENT", None)
+        env.pop("FOUNDRY_PROJECT_ENDPOINT", None)
+        env.pop("FOUNDRY_MODEL_NAME", None)
 
         result = subprocess.run(
             [sys.executable, str(SPIKE_SCRIPT)],
