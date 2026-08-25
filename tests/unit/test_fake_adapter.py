@@ -66,14 +66,19 @@ class TestFakeAdapterTrace:
         self, fake_adapter: FakeAgentAdapter, sample_test_case: TestCase
     ) -> None:
         result = fake_adapter.run(sample_test_case)
-        assert result.token_usage is not None
-        assert result.token_usage.total_tokens > 0
+        token_usage = result.token_usage
+        assert token_usage is not None
+        total_tokens = token_usage.total_tokens
+        assert total_tokens is not None
+        assert total_tokens > 0
 
     def test_has_timing(self, fake_adapter: FakeAgentAdapter, sample_test_case: TestCase) -> None:
         result = fake_adapter.run(sample_test_case)
-        assert result.start_time is not None
-        assert result.end_time is not None
-        assert result.end_time > result.start_time
+        start_time = result.start_time
+        end_time = result.end_time
+        assert start_time is not None
+        assert end_time is not None
+        assert end_time > start_time
 
     def test_no_errors(self, fake_adapter: FakeAgentAdapter, sample_test_case: TestCase) -> None:
         result = fake_adapter.run(sample_test_case)
