@@ -7,7 +7,7 @@
     "agent_version": "foundry-live-v1",
     "prompt_version": "foundry-spike-v1",
     "model_identifier": "gpt-4.1-deployment",
-    "final_response": "The current status of synthetic claim CLM-SPIKE-001 is: Under Review.\n\nIf you need more details about this claim, such as recent updates or next steps, please let me know!",
+    "final_response": "The status of synthetic claim CLM-SPIKE-001 is currently Under Review. If you need more details about this claim or its progress, please let me know!",
     "tool_calls": [
       {
         "sequence": 0,

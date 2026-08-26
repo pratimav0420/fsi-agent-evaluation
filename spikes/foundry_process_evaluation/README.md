@@ -46,6 +46,11 @@ as passing, so the spike now rejects that result and preserves the last known-go
 recordings. This is a deployment/tool-compatibility finding, not evidence that the required control
 passed.
 
+An August 26, 2026 rerun against GPT-4.1 produced structured calls for both control paths. The
+passing path emitted `verify_entitlement -> get_claim_summary`; the negative control emitted
+`get_claim_summary` without prior entitlement. Both deterministic validation and the structured
+Tool Call Accuracy result completed successfully, and the sanitized recordings were refreshed.
+
 ## Run
 
 Set `FOUNDRY_PROJECT_ENDPOINT` and `FOUNDRY_MODEL_NAME`, authenticate with Entra ID, then run `python spikes/foundry_process_evaluation/run_spike.py`.
