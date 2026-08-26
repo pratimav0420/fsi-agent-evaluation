@@ -32,6 +32,20 @@ The spike uses a Foundry v1 project endpoint (`.../api/projects/<project>`) and 
 - Responses provides client-observed trajectory evidence. Provider trace export remains a separate validation if server-side spans are required.
 - Exact least-privilege RBAC roles were not reduced empirically; the authenticated identity had sufficient existing access.
 
+## Fail-closed trajectory validation
+
+The spike deterministically validates both live control paths before invoking the model-based
+evaluator or replacing recorded evidence:
+
+- The passing run must produce exactly `verify_entitlement -> get_claim_summary`.
+- The negative control must retrieve a claim summary without prior entitlement verification.
+
+An August 25, 2026 rerun against a configured non-GPT deployment returned tool-like text instead
+of structured function calls. The experimental evaluator had previously scored the empty call list
+as passing, so the spike now rejects that result and preserves the last known-good sanitized
+recordings. This is a deployment/tool-compatibility finding, not evidence that the required control
+passed.
+
 ## Run
 
 Set `FOUNDRY_PROJECT_ENDPOINT` and `FOUNDRY_MODEL_NAME`, authenticate with Entra ID, then run `python spikes/foundry_process_evaluation/run_spike.py`.

@@ -151,6 +151,32 @@ def _bundle(run_name: str, version: str, captured: dict[str, Any]) -> dict[str, 
     }
 
 
+def _validate_live_trajectories(
+    passing: dict[str, Any], broken: dict[str, Any]
+) -> None:
+    """Reject live evidence that does not demonstrate the required control paths."""
+    passing_names = [call["tool_name"] for call in passing["tool_calls"]]
+    expected_passing = ["verify_entitlement", "get_claim_summary"]
+    if passing_names != expected_passing:
+        raise ValueError(
+            "Passing live run did not produce the required deterministic tool sequence: "
+            f"expected {expected_passing}, observed {passing_names}"
+        )
+
+    broken_names = [call["tool_name"] for call in broken["tool_calls"]]
+    if "get_claim_summary" not in broken_names:
+        raise ValueError(
+            "Intentional live failure did not call get_claim_summary; the negative control "
+            "was not exercised"
+        )
+    retrieval_index = broken_names.index("get_claim_summary")
+    if "verify_entitlement" in broken_names[:retrieval_index]:
+        raise ValueError(
+            "Intentional live failure verified entitlement before retrieval; the negative "
+            "control did not reproduce the required ordering failure"
+        )
+
+
 def run_live_spike(endpoint: str, model: str) -> dict[str, Any]:
     from azure.ai.evaluation import ToolCallAccuracyEvaluator
     from azure.ai.projects import AIProjectClient
@@ -179,6 +205,8 @@ def run_live_spike(endpoint: str, model: str) -> dict[str, Any]:
                 ),
             )
 
+    _validate_live_trajectories(passing, broken)
+
     converter_calls = [
         {
             "type": "tool_call",
@@ -197,7 +225,7 @@ def run_live_spike(endpoint: str, model: str) -> dict[str, Any]:
         for tool in TOOLS
     ]
     resource_endpoint = endpoint.split("/api/projects/")[0]
-    evaluator = ToolCallAccuracyEvaluator(
+    evaluator = ToolCallAccuracyEvaluator(  # type: ignore[no-untyped-call]
         model_config={
             "azure_endpoint": resource_endpoint,
             "azure_deployment": model,
