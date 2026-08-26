@@ -11,6 +11,9 @@ env/
 # Environment files (contain secrets)
 .env
 
+# Local-only workshop materials
+workshop/
+
 # IDE
 .vscode/
 .idea/
