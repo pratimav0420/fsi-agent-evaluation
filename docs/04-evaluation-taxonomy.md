@@ -1,6 +1,6 @@
 # Evaluation Taxonomy
 
-The L100 view uses six domains: outcome, evidence, process, control, resilience, and experience.
+The taxonomy uses six domains: outcome, evidence, process, control, resilience, and experience.
 
 | Domain | Question | Typical evaluator |
 |---|---|---|

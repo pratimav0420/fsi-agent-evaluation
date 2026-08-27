@@ -10,7 +10,7 @@ from fsi_agent_eval.evaluators import decide_gate, evaluate_run
 def _case() -> TestCase:
     return TestCase(
         id="TC-001",
-        requirement_id="REQ-ENTITLEMENT-001",
+        requirement_id="FSI-AUTH-001",
         conversation_turns=["Status?"],
         expected_tool_sequence=["verify_entitlement", "get_claim_summary"],
     )

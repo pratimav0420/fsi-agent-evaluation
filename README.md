@@ -1,12 +1,25 @@
 # FSI Agent Evaluation Starter Kit
 
-An executable reference for moving an enterprise agent from a convincing demo to requirement-traceable release evidence. The sample is a small Personal Auto Post-FNOL Claims Servicing Agent using synthetic data only.
+An executable reference for turning agent requirements into repeatable release evidence. The
+sample is a deliberately small Personal Auto Claims Servicing Agent operating after First Notice
+of Loss (FNOL), with synthetic data only.
 
-The kit demonstrates deterministic control assertions, semantic-evaluator extension points, normalized trajectory evidence, severity-aware gates, baseline comparison, failure analysis, and CI/CD integration. It is not a compliance certification tool or a production claims system.
+The kit demonstrates requirement traceability, deterministic control assertions, normalized tool
+trajectories, severity-aware release gates, regression comparison, failure analysis, sanitized
+evidence, and optional live Microsoft Foundry validation. It is not a compliance certification
+tool, runtime guardrail, or production claims system.
 
-## Quick start
+## What you can prove
 
-Use Python 3.11 or newer.
+- Every curated case maps to a stable `FSI-*` requirement.
+- Critical authorization and action-boundary failures block release independently of averages.
+- Provider-specific SDK objects stay behind `AgentAdapter`; gates consume normalized contracts.
+- A known-good agent passes while an intentional retrieval-before-entitlement build is blocked.
+- Recorded live Foundry traces can be replayed without Azure access.
+
+## Five-minute quick start
+
+Use Python 3.11 or newer in a virtual environment.
 
 ```text
 python -m pip install -e ".[dev]"
@@ -17,41 +30,64 @@ fsi-agent-eval compare
 fsi-agent-eval replay --bundle data/offline-bundle/live-pass.json
 ```
 
-The baseline runs five representative synthetic cases. The broken profile intentionally retrieves protected claim data before entitlement verification and must be blocked. To run all 20 curated cases:
+`broken` and a regression-producing `compare` intentionally exit nonzero because they demonstrate
+a blocking release decision. The default baseline uses five representative synthetic cases. Run
+the complete 20-case suite with:
 
 ```text
-fsi-agent-eval baseline --cases evaluations/datasets/seed-cases.yaml --output artifacts/pull-request
+fsi-agent-eval baseline --cases evaluations/datasets/seed-cases.yaml --output artifacts/full
 ```
 
-Each run writes JSON, Markdown, and JUnit-compatible evidence. Azure is not required for offline evaluation.
+Each evaluation run writes JSON, Markdown, and JUnit-compatible evidence. Azure is not required
+for the offline path.
 
-The recorded live bundle was produced from a sanitized Foundry v1 run. Replaying
-`live-broken-order.json` must block on entitlement-before-retrieval.
+## How it works
+
+```mermaid
+flowchart LR
+    R[FSI requirements] --> C[Synthetic cases]
+    C --> A[AgentAdapter]
+    A --> T[Normalized trace]
+    T --> E[Evaluator results]
+    E --> G[Severity gate]
+    G --> P[Release evidence]
+    G --> F[Failure analysis]
+    F --> C
+```
 
 ## Repository map
 
-- `docs/`: product charter, behavioral boundaries, taxonomy, architecture, gate policy, and decisions.
-- `evaluations/`: ten requirements, 20 curated cases, and execution profiles.
-- `src/fsi_agent_eval/`: provider-neutral contracts, local/fake adapters, tools, evaluators, gates, reporting, and CLI.
-- `spikes/`: isolated live Microsoft Foundry validation.
-- `failure-lab/`: intentional failures, diagnoses, remediation, and regression links.
-- `.github/workflows/`: runnable offline PR gate and approved OIDC-based live validation.
-
-## Design principles
-
-1. Every case and result links to a stable business requirement.
-2. Objective behavior uses deterministic assertions; model-based judges are limited to semantic quality.
-3. Critical failures and required evaluator errors cannot be averaged away.
-4. Gate logic consumes normalized contracts, never raw provider objects.
-5. Evaluation evidence informs release decisions but is not a runtime guardrail.
-6. No real customer, claim, policy, identity, or Azure configuration belongs in the repository.
-
-Start with the [product charter](docs/01-product-charter.md), [scenario boundaries](docs/02-scenario-and-agent-boundaries.md), and [release gates](docs/06-release-gates.md).
+- [`docs/`](docs/README.md): concepts, architecture, gates, decisions, and adoption guidance.
+- [`evaluations/`](evaluations/): authoritative requirements and 20 curated cases.
+- [`src/fsi_agent_eval/`](src/fsi_agent_eval/): adapters, contracts, tools, evaluators, gates, and reporting.
+- [`failure-lab/`](failure-lab/README.md): a runnable authorization-ordering failure analysis.
+- [`spikes/`](spikes/foundry_process_evaluation/README.md): bounded live Foundry validation.
+- [`.github/workflows/evaluation.yml`](.github/workflows/evaluation.yml): offline and approved live CI gates.
 
 ## Live Foundry validation
 
-The optional spike uses `DefaultAzureCredential` and two runtime settings documented in `.env.example`. It captures only sanitized trace-shape and SDK findings. The live path must never silently fall back to fake results.
+The optional live path uses `DefaultAzureCredential`, a Foundry project endpoint, and a deployment
+that emits structured function calls. GPT-4.1 is the validated deployment for the recorded bundle.
+Copy `.env.example` for local configuration; never commit `.env`, credentials, resource identifiers,
+or customer data.
+
+The live spike fails closed unless it observes both the required authorization-first trajectory and
+the intentional negative-control trajectory. It writes only sanitized evidence.
+
+## Known limitations
+
+- The local runner is a deterministic reference agent, not a deployable claims application.
+- Semantic evaluation is an extension contract; the default offline gate is deterministic.
+- The live Tool Call Accuracy evaluator is experimental and cannot replace deterministic controls.
+- Production monitoring, exception approval, and durable evidence storage are documented patterns,
+  not deployed services.
+- Exact least-privilege OIDC/RBAC validation remains environment-specific.
+
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for setup, validation, and pull-request expectations. Report
+security concerns through [`SECURITY.md`](SECURITY.md), not public issues.
 
 ## License
 
-MIT.
+MIT. See [`LICENSE`](LICENSE).

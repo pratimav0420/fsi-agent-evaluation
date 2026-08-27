@@ -163,8 +163,8 @@ class TestEvaluationContracts:
     def test_evaluation_result_round_trip(self) -> None:
         result = EvaluationResult(
             evaluator_name="entitlement_before_retrieval",
-            requirement_id="REQ-ENTITLEMENT-001",
-            test_case_id="TC-001",
+            requirement_id="FSI-AUTH-001",
+            test_case_id="FSI-CASE-001",
             passed=True,
             severity=Severity.CRITICAL,
             message="verify_entitlement called before get_claim_summary",
@@ -177,8 +177,8 @@ class TestEvaluationContracts:
     def test_gate_result_blocking(self) -> None:
         failed = EvaluationResult(
             evaluator_name="prohibited_tool_check",
-            requirement_id="REQ-BOUNDARY-001",
-            test_case_id="TC-005",
+            requirement_id="FSI-ACT-001",
+            test_case_id="FSI-CASE-005",
             passed=False,
             severity=Severity.CRITICAL,
             message="Agent called modify_claim which is prohibited.",

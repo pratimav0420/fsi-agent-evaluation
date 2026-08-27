@@ -2,10 +2,12 @@
 
 ## Profiles
 
-- `local-smoke`: five representative offline cases for fast development feedback.
-- `pull-request`: deterministic controls and schema/traceability validation.
-- `pre-release`: all 20 cases plus approved model-based and live Foundry suites.
-- `continuous`: sampled, sanitized production-derived candidates; report-first until promoted.
+- **Local demo:** five representative offline cases for fast development feedback.
+- **Full offline:** all 20 curated cases with deterministic controls and traceability validation.
+- **Recorded replay:** credential-free evaluation of sanitized live traces.
+- **Live Foundry:** manually approved structured-tool validation using synthetic inputs.
+
+The semantic evaluator is an extension point and is not part of the default offline gate.
 
 ## Precedence
 

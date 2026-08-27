@@ -1,5 +1,19 @@
 # Reference Architecture
 
+```mermaid
+flowchart LR
+    R[Requirements] --> C[Synthetic cases]
+    C --> A[AgentAdapter]
+    A --> T[Normalized AgentRunResult]
+    T --> D[Deterministic evaluators]
+    T --> S[Optional semantic evaluator]
+    D --> G[Severity-aware gate]
+    S --> G
+    G --> E[JSON / Markdown / JUnit evidence]
+    E --> F[Failure analysis and regression cases]
+    F --> C
+```
+
 ## Components
 
 1. A test-case catalog supplies requirement-linked synthetic inputs and oracles.
@@ -17,7 +31,7 @@ Change -> local smoke -> PR deterministic suite -> approved credential-dependent
 
 ## Identity and trust
 
-GitHub Actions uses OIDC with a federated credential on an Entra application/service principal. No client secret or API key is stored. A user-assigned managed identity is an option for eligible self-hosted runners. Exact least-privilege roles remain a live validation item.
+GitHub Actions uses OIDC with a federated credential on an Entra application/service principal. No client secret or API key is stored. A user-assigned managed identity is an option for eligible self-hosted runners. The exact minimum role assignment must be validated in each target environment.
 
 ## Versioning and evidence
 

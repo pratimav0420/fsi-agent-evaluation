@@ -70,8 +70,8 @@ retrieves, explains, and escalates.
 
 ### Positive
 
-- Personal auto is the highest-volume P&C line — immediately recognizable to
-  most insurance audiences.
+- Personal auto is a broadly recognizable insurance scenario with clear
+  servicing boundaries.
 - Post-FNOL servicing has a clear decision boundary: the agent retrieves and
   explains but never decides.
 - Multi-turn conversations with branching paths (status check → document
@@ -91,8 +91,8 @@ retrieves, explains, and escalates.
   and boundary characteristics.
 - Personal auto is US-centric terminology. Mitigation: include a minimal
   glossary; note that "motor claims" is the equivalent term in other markets.
-- Narrowing to post-FNOL excludes intake scenarios. Mitigation: document FNOL
-  as a potential extension exercise in L300.
+- Narrowing to post-FNOL excludes intake scenarios. Mitigation: treat FNOL
+  intake as a separate extension with its own authority boundaries.
 
 ### Architectural Consideration
 
@@ -107,8 +107,9 @@ Azure AI Search. The resolved approach for this kit:
 3. **Separated evaluation suites** (deterministic and model-based) combined
    into one requirement-traceable release report.
 
-Week 2 validates exact trace serialization formats and process-evaluator
-compatibility against the sample agent’s tools.
+Live validation confirmed structured function-call capture with GPT-4.1. The
+spike fails closed when a deployment returns tool-like text instead of
+structured calls.
 
 ## References
 
