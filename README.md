@@ -82,12 +82,3 @@ the intentional negative-control trajectory. It writes only sanitized evidence.
 - Production monitoring, exception approval, and durable evidence storage are documented patterns,
   not deployed services.
 - Exact least-privilege OIDC/RBAC validation remains environment-specific.
-
-## Contributing
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for setup, validation, and pull-request expectations. Report
-security concerns through [`SECURITY.md`](SECURITY.md), not public issues.
-
-## License
-
-MIT. See [`LICENSE`](LICENSE).
