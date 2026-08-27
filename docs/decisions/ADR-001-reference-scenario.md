@@ -113,4 +113,3 @@ compatibility against the sample agent’s tools.
 ## References
 
 - Product Charter: `docs/01-product-charter.md`
-- Learning Path: `workshop/learning-path.md`

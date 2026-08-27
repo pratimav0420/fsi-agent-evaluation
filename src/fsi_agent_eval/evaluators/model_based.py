@@ -27,7 +27,7 @@ class SemanticEvaluator(Protocol):
 
 
 class RecordedSemanticEvaluator:
-    """Replay reviewed semantic results in the credential-free workshop."""
+    """Replay reviewed semantic results in the credential-free offline demo."""
 
     def __init__(self, results: dict[tuple[str, str], EvaluationResult]) -> None:
         self._results = results

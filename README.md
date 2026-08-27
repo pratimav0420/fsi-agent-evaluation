@@ -35,7 +35,6 @@ The recorded live bundle was produced from a sanitized Foundry v1 run. Replaying
 - `src/fsi_agent_eval/`: provider-neutral contracts, local/fake adapters, tools, evaluators, gates, reporting, and CLI.
 - `spikes/`: isolated live Microsoft Foundry validation.
 - `failure-lab/`: intentional failures, diagnoses, remediation, and regression links.
-- `workshop/`: L100-L300 learning path, 60-minute workshop, and customer mapping worksheets.
 - `.github/workflows/`: runnable offline PR gate and approved OIDC-based live validation.
 
 ## Design principles
@@ -47,7 +46,7 @@ The recorded live bundle was produced from a sanitized Foundry v1 run. Replaying
 5. Evaluation evidence informs release decisions but is not a runtime guardrail.
 6. No real customer, claim, policy, identity, or Azure configuration belongs in the repository.
 
-Start with the [product charter](docs/01-product-charter.md), [scenario boundaries](docs/02-scenario-and-agent-boundaries.md), and [workshop](workshop/60-minute-workshop.md).
+Start with the [product charter](docs/01-product-charter.md), [scenario boundaries](docs/02-scenario-and-agent-boundaries.md), and [release gates](docs/06-release-gates.md).
 
 ## Live Foundry validation
 

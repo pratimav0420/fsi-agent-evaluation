@@ -1,4 +1,4 @@
-"""Deterministic local claims agent used by the offline workshop."""
+"""Deterministic local claims agent used by the offline evaluation demo."""
 
 from __future__ import annotations
 

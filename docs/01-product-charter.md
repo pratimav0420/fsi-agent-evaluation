@@ -123,7 +123,7 @@ recorded. It operates within a narrow, well-defined decision boundary.
 
 | # | Deliverable | L-Level | August Week |
 |---|---|---|---|
-| D1 | Product charter, learning path, ADRs | L100 | 1 |
+| D1 | Product charter and ADRs | L100 | 1 |
 | D2 | Reference agent (personal auto claims servicing) | L200 | 2 |
 | D3 | Golden dataset (20 hand-authored cases) + requirement traceability matrix | L200 | 2 |
 | D3a | Offline L100 evaluation bundle (recorded outputs, traces, results, gate decisions) | L100 | 2 |
@@ -133,7 +133,6 @@ recorded. It operates within a narrow, well-defined decision boundary.
 | D7 | GitHub Actions pipeline with OIDC auth and severity-aware release gates | L200 | 4 |
 | D8 | Failure analysis tooling | L300 | 4 |
 | D9 | Production feedback loop (documented pattern) | L300 | 4 |
-| D10 | Workshop walkthrough (presenter + self-paced) | L100–L300 | 4 |
 
 ---
 
@@ -147,9 +146,8 @@ recorded. It operates within a narrow, well-defined decision boundary.
    release gate in CI (demonstrated via a "bad build" test case).
 4. **Time-to-first-result:** A new user runs the prepared baseline evaluation
    and sees results in under 20 minutes.
-5. **Learning path completion:** Each L-level section is self-contained;
-   an L100 learner does not need to read L300 content to achieve stated
-   outcomes.
+5. **Progressive adoption:** A new user can run the offline baseline before
+   moving into customization and live operationalization.
 6. **Zero real data:** Repository passes automated scan confirming no PII
    or real policy/claim identifiers.
 
@@ -268,8 +266,8 @@ bundle** shipped in the repository:
   blocks" exercise).
 
 An **optional live mode** reproduces the same evaluation against a Foundry
-endpoint. Azure access is required only for live mode — not for the
-mandatory L100 workshop.
+endpoint. Azure access is required only for live mode, not for the prepared
+offline baseline.
 
 ---
 
@@ -307,7 +305,7 @@ surprises.
 | Risk | Mitigation |
 |---|---|
 | Foundry eval SDK changes during development | Pin SDK version; abstract evaluation calls behind interface |
-| Kit perceived as compliance tool | Explicit disclaimers in README, charter, and workshop |
+| Kit perceived as compliance tool | Explicit disclaimers in README, charter, and release evidence |
 | Scope creep beyond post-FNOL servicing boundary | Agent capability boundary documented; PRs adding decision logic rejected |
 | Evaluation results misinterpreted as model benchmarks | Documentation clarifies eval measures agent behavior, not model capability |
 | Process evaluator tool-type limitations | User-defined function tools + custom assertions; validated in Week 2 spike |
@@ -328,7 +326,7 @@ surprises.
 
 | August Week | Focus |
 |---|---|
-| 1 | Product definition (this document), learning path, ADRs |
+| 1 | Product definition (this document) and ADRs |
 | 2 | Reference agent, golden dataset, traceability matrix, offline bundle, validation spike |
 | 3 | Evaluator suites (deterministic + model-based + process), combined release report |
-| 4 | CI/CD pipeline (OIDC), severity-aware gates, failure analysis, workshop content |
+| 4 | CI/CD pipeline (OIDC), severity-aware gates, failure analysis, and adoption feedback |

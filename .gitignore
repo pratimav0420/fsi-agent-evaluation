@@ -14,6 +14,11 @@ env/
 # Local-only workshop materials
 workshop/
 
+# Local planning and publication drafts
+docs/week-2-validation-backlog.md
+docs/09-completion-status.md
+docs/article-outline.md
+
 # IDE
 .vscode/
 .idea/
@@ -26,10 +31,12 @@ build/
 
 # Test/coverage
 .pytest_cache/
+.ruff_cache/
 .coverage
 htmlcov/
 .mypy_cache/
 artifacts/
+tmp/
 
 # OS
 .DS_Store
