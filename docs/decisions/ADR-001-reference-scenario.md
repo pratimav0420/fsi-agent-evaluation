@@ -107,7 +107,7 @@ Azure AI Search. The resolved approach for this kit:
 3. **Separated evaluation suites** (deterministic and model-based) combined
    into one requirement-traceable release report.
 
-Live validation confirmed structured function-call capture with GPT-4.1. The
+Live validation confirmed structured function-call capture with a compatible deployment. The
 spike fails closed when a deployment returns tool-like text instead of
 structured calls.
 

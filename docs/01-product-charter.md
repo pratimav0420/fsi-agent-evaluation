@@ -70,7 +70,7 @@ The repository does not provide:
 
 - The 20-case deterministic baseline passes 150 of 150 checks.
 - The intentional authorization-ordering build is blocked with 12 findings.
-- A sanitized GPT-4.1 live run produced the required structured tool trajectory.
+- A sanitized live run produced the required structured tool trajectory.
 - The recorded passing bundle replays successfully; the negative control is blocked.
 - Unit tests, Ruff, strict mypy, schema validation, and traceability validation pass.
 

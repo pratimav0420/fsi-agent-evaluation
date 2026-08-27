@@ -5,12 +5,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      run_live:
-        description: Run credential-dependent Foundry validation
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: read
@@ -44,7 +38,8 @@ jobs:
           retention-days: ${{ github.ref == 'refs/heads/main' && 90 || 30 }}
 
   foundry-validation:
-    if: github.event_name == 'workflow_dispatch' && inputs.run_live
+    if: github.event_name != 'pull_request'
+    needs: offline-evaluation
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: foundry-validation
@@ -65,7 +60,7 @@ jobs:
       - name: Run sanitized Foundry spike
         env:
           FOUNDRY_PROJECT_ENDPOINT: ${{ vars.FOUNDRY_PROJECT_ENDPOINT }}
-          FOUNDRY_MODEL_NAME: ${{ vars.FOUNDRY_MODEL_NAME }}
+          FOUNDRY_DEPLOYMENT_NAME: ${{ vars.FOUNDRY_DEPLOYMENT_NAME }}
         run: python spikes/foundry_process_evaluation/run_spike.py
       - name: Verify normalized live gate decisions
         run: |

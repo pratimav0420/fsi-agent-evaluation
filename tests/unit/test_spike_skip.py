@@ -24,7 +24,7 @@ class TestSpikeSkipBehavior:
         env = os.environ.copy()
         # Ensure required vars are not set
         env.pop("FOUNDRY_PROJECT_ENDPOINT", None)
-        env.pop("FOUNDRY_MODEL_NAME", None)
+        env.pop("FOUNDRY_DEPLOYMENT_NAME", None)
 
         result = subprocess.run(
             [sys.executable, str(SPIKE_SCRIPT)],
@@ -42,7 +42,7 @@ class TestSpikeSkipBehavior:
         """Spike never silently produces fake results when config is missing."""
         env = os.environ.copy()
         env.pop("FOUNDRY_PROJECT_ENDPOINT", None)
-        env.pop("FOUNDRY_MODEL_NAME", None)
+        env.pop("FOUNDRY_DEPLOYMENT_NAME", None)
 
         result = subprocess.run(
             [sys.executable, str(SPIKE_SCRIPT)],

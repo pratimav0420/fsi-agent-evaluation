@@ -6,7 +6,7 @@
     "run_id": "live-broken-sanitized",
     "agent_version": "foundry-broken-order-v1",
     "prompt_version": "foundry-spike-v1",
-    "model_identifier": "gpt-4.1-deployment",
+    "model_identifier": "sanitized-live-deployment",
     "final_response": "The status of synthetic claim CLM-SPIKE-001 is currently Under Review. The incident date associated with this claim is July 1, 2026. \n\nIf you need more details about this claim or further actions, please let me know!",
     "tool_calls": [
       {

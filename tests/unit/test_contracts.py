@@ -69,7 +69,7 @@ class TestAgentRunResultSerialization:
             run_id="run-001",
             agent_version="v0.1.0",
             prompt_version="prompt-v1",
-            model_identifier="gpt-4o",
+            model_identifier="synthetic-test-deployment",
             final_response="Your claim is under review.",
             tool_calls=[
                 ToolCallRecord(
@@ -140,7 +140,7 @@ class TestTraceContracts:
         trace = NormalizedTrace(
             run_id="run-001",
             thread_id="thread-001",
-            model="gpt-4o",
+            model="synthetic-test-deployment",
             tool_call_traces=[
                 RawToolCallTrace(
                     provider_call_id="call_1",

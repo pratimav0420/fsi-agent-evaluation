@@ -6,7 +6,7 @@ of Loss (FNOL), with synthetic data only.
 
 The kit demonstrates requirement traceability, deterministic control assertions, normalized tool
 trajectories, severity-aware release gates, regression comparison, failure analysis, sanitized
-evidence, and optional live Microsoft Foundry validation. It is not a compliance certification
+evidence, and live Microsoft Foundry release validation. It is not a compliance certification
 tool, runtime guardrail, or production claims system.
 
 ## What you can prove
@@ -45,7 +45,7 @@ for the offline path.
 
 ```mermaid
 flowchart LR
-    R[FSI requirements] --> C[Synthetic cases]
+    R[Requirements] --> C[Synthetic cases]
     C --> A[AgentAdapter]
     A --> T[Normalized trace]
     T --> E[Evaluator results]
@@ -66,8 +66,8 @@ flowchart LR
 
 ## Live Foundry validation
 
-The optional live path uses `DefaultAzureCredential`, a Foundry project endpoint, and a deployment
-that emits structured function calls. GPT-4.1 is the validated deployment for the recorded bundle.
+The release-stage live path uses `DefaultAzureCredential`, a Foundry project endpoint, and a
+deployment that emits structured function calls.
 Copy `.env.example` for local configuration; never commit `.env`, credentials, resource identifiers,
 or customer data.
 

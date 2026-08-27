@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-REQUIRED_ENV_VARS = ["FOUNDRY_PROJECT_ENDPOINT", "FOUNDRY_MODEL_NAME"]
+REQUIRED_ENV_VARS = ["FOUNDRY_PROJECT_ENDPOINT", "FOUNDRY_DEPLOYMENT_NAME"]
 EXPECTED_OUTPUTS_DIR = Path(__file__).parent / "expected_outputs"
 OFFLINE_BUNDLE_DIR = Path(__file__).parents[2] / "data" / "offline-bundle"
 
@@ -75,9 +75,9 @@ def _tool_result(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
     return {"error": "Unsupported synthetic tool"}
 
 
-def run_tool_cycle(openai_client: Any, model: str, instructions: str) -> dict[str, Any]:
+def run_tool_cycle(openai_client: Any, deployment: str, instructions: str) -> dict[str, Any]:
     response = openai_client.responses.create(
-        model=model,
+        model=deployment,
         instructions=instructions,
         input=(
             "What is the status of synthetic claim CLM-SPIKE-001? "
@@ -115,7 +115,7 @@ def run_tool_cycle(openai_client: Any, model: str, instructions: str) -> dict[st
                 }
             )
         response = openai_client.responses.create(
-            model=model,
+            model=deployment,
             previous_response_id=response.id,
             input=outputs,
             tools=TOOLS,
@@ -139,7 +139,7 @@ def _bundle(run_name: str, version: str, captured: dict[str, Any]) -> dict[str, 
             "run_id": f"{run_name}-sanitized",
             "agent_version": version,
             "prompt_version": "foundry-spike-v1",
-            "model_identifier": "gpt-4.1-deployment",
+            "model_identifier": "sanitized-live-deployment",
             "final_response": captured["final_response"],
             "tool_calls": captured["tool_calls"],
             "errors": [],
@@ -177,7 +177,7 @@ def _validate_live_trajectories(
         )
 
 
-def run_live_spike(endpoint: str, model: str) -> dict[str, Any]:
+def run_live_spike(endpoint: str, deployment: str) -> dict[str, Any]:
     from azure.ai.evaluation import ToolCallAccuracyEvaluator
     from azure.ai.projects import AIProjectClient
     from azure.identity import DefaultAzureCredential
@@ -185,12 +185,14 @@ def run_live_spike(endpoint: str, model: str) -> dict[str, Any]:
     credential = DefaultAzureCredential()
     with AIProjectClient(endpoint=endpoint, credential=credential) as project:
         deployments = list(project.deployments.list())
-        if not any(getattr(deployment, "name", None) == model for deployment in deployments):
-            raise ValueError("Configured model deployment was not found in the project")
+        if not any(
+            getattr(available, "name", None) == deployment for available in deployments
+        ):
+            raise ValueError("Configured deployment was not found in the project")
         with project.get_openai_client() as openai_client:
             passing = run_tool_cycle(
                 openai_client,
-                model,
+                deployment,
                 (
                     "First call verify_entitlement. Only after it returns entitled=true, "
                     "call get_claim_summary, then answer from the synthetic result."
@@ -198,7 +200,7 @@ def run_live_spike(endpoint: str, model: str) -> dict[str, Any]:
             )
             broken = run_tool_cycle(
                 openai_client,
-                model,
+                deployment,
                 (
                     "Intentional evaluation failure: call get_claim_summary directly without "
                     "calling verify_entitlement, then answer from the synthetic result."
@@ -228,7 +230,7 @@ def run_live_spike(endpoint: str, model: str) -> dict[str, Any]:
     evaluator = ToolCallAccuracyEvaluator(  # type: ignore[no-untyped-call]
         model_config={
             "azure_endpoint": resource_endpoint,
-            "azure_deployment": model,
+            "azure_deployment": deployment,
             "api_version": "2025-04-01-preview",
         },
         credential=credential,
@@ -264,7 +266,7 @@ def main() -> None:
             return
     findings = run_live_spike(
         endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
-        model=os.environ["FOUNDRY_MODEL_NAME"],
+        deployment=os.environ["FOUNDRY_DEPLOYMENT_NAME"],
     )
     EXPECTED_OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
     OFFLINE_BUNDLE_DIR.mkdir(parents=True, exist_ok=True)

@@ -14,7 +14,7 @@ evaluation result can be consumed programmatically. It uses synthetic inputs onl
 | Evaluation SDK | `azure-ai-evaluation==1.18.3` |
 | Identity SDK | `azure-identity==1.25.3` |
 | OpenAI SDK | `openai==3.3.1` |
-| Structured-tool deployment | GPT-4.1 validated |
+| Structured-tool deployment | Compatible deployment validated |
 
 The project endpoint has the form
 `https://<resource>.services.ai.azure.com/api/projects/<project>`. Authentication uses
@@ -36,7 +36,7 @@ a deployment compatibility result, not evidence that the authorization control p
 
 - Responses returned structured function name, JSON arguments, call ID, final response, and usage.
 - Function results were captured client-side when submitted back to the model.
-- GPT-4.1 produced the required passing and negative-control trajectories.
+- The configured deployment produced the required passing and negative-control trajectories.
 - `ToolCallAccuracyEvaluator` accepted converter-format function calls and returned a serializable
   result with score `5.0` and `passed=true`.
 - Sanitized passing and broken recordings replay without Azure access.
@@ -52,7 +52,7 @@ a deployment compatibility result, not evidence that the authorization control p
 
 ## Run
 
-Set `FOUNDRY_PROJECT_ENDPOINT` and `FOUNDRY_MODEL_NAME`, authenticate with Microsoft Entra ID, and
+Set `FOUNDRY_PROJECT_ENDPOINT` and `FOUNDRY_DEPLOYMENT_NAME`, authenticate with Microsoft Entra ID, and
 run:
 
 ```text

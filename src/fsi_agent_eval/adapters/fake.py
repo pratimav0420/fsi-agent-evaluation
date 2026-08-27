@@ -74,7 +74,7 @@ class FakeAgentAdapter:
             run_id="run-fake-001",
             agent_version=self._agent_version,
             prompt_version="prompt-v1",
-            model_identifier="gpt-4o-fake",
+            model_identifier="synthetic-test-deployment",
             final_response=(
                 "Your claim CLM-FAKE-20260101-001 is currently Under Review. "
                 "The incident on 2026-06-15 involving your 2023 Sedan is being assessed. "

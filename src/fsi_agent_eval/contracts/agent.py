@@ -61,7 +61,7 @@ class AgentRunResult(BaseModel):
         default=None, description="Version of the system prompt, if tracked separately."
     )
     model_identifier: str | None = Field(
-        default=None, description="Model deployment name or ID used for this run."
+        default=None, description="Sanitized deployment identifier used for this run."
     )
     final_response: str = Field(description="The agent's final text response to the user.")
     tool_calls: list[ToolCallRecord] = Field(
